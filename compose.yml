@@ -1,0 +1,30 @@
+configs:
+  nats-server.conf:
+    content: |
+      jetstream {
+        store: file
+      }
+
+
+services:
+  nats:
+    image: nats:latest
+    container_name: nats_server
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - nats_data:/data
+    configs:
+      - source: nats-server.conf
+        target: nats-server.conf
+    restart: unless-stopped
+  box:
+    image: ubuntu
+    container_name: ubuntu
+    command:
+      - sleep
+      - infinity
+
+volumes:
+  nats_data:
