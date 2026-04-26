@@ -1,0 +1,24 @@
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+name: Release new version of the package
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install Python 3.11
+        run: uv python install 3.11
+      - name: Build
+        run: uv build
+      - name: Publish package
+        run: |
+          uv publish -v \
+          --username ${{ secrets.PYPI_USERNAME }} \
+          --password ${{ secrets.PYPI_PASSWORD }}
